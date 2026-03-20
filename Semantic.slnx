@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Semantic/Semantic.csproj" />
+  <Project Path="SemanticTests/SemanticTests.csproj" />
+</Solution>
