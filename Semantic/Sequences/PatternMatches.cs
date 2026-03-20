@@ -7,6 +7,8 @@ internal class PatternMatches : IPatternMatches
     private readonly int[] _pattern;
     private int _currentIndex = 0;
 
+    public event EventHandler? Matched;
+
     public PatternMatches(IEnumerable<int> pattern)
     {
         _pattern = pattern.ToArray();
@@ -27,6 +29,10 @@ internal class PatternMatches : IPatternMatches
         if (item == _pattern[_currentIndex])
         {
             _currentIndex++;
+            if (_currentIndex == _pattern.Length)
+            {
+                Matched?.Invoke(this, EventArgs.Empty);
+            }
         }
         else
         {
