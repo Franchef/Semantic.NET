@@ -4,7 +4,7 @@ namespace Semantic.Sequences;
 /// This class implements a sliding window of a fixed size. When the window is full, adding a new item will remove the oldest item from the window. The GetItems method returns the current items in the window in the order they were added, with the oldest item first and the newest item last.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class SlidingWindow<T> : ISlidingWindow<T>
+internal sealed class SlidingWindow<T> : ISlidingWindow<T>
 {
     public SlidingWindow(int size)
     {

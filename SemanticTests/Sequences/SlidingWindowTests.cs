@@ -6,9 +6,41 @@ namespace SemanticTests.Sequences;
 public class SlidingWindowTests
 {
     [Fact]
+    public void TestSlidingWindowInvalidSizeThrows()
+    {
+        Assert.Throws<ArgumentException>(() => SlidingWindowBuilder.Create<int>(0));
+        Assert.Throws<ArgumentException>(() => SlidingWindowBuilder.Create<int>(-1));
+    }
+
+    [Fact]
+    public void TestSlidingWindowSizeProperty()
+    {
+        var window = SlidingWindowBuilder.Create<int>(5);
+        Assert.Equal(5, window.Size);
+    }
+
+    [Fact]
+    public void TestSlidingWindowSizeOne()
+    {
+        var window = SlidingWindowBuilder.Create<int>(1);
+
+        Assert.Empty(window.GetItems());
+
+        window.Add(1);
+        Assert.Equal([1], window.GetItems());
+
+        // Each new item replaces the previous one
+        window.Add(2);
+        Assert.Equal([2], window.GetItems());
+
+        window.Add(3);
+        Assert.Equal([3], window.GetItems());
+    }
+
+    [Fact]
     public void TestSlidingWindow()
     {
-        var window = new SlidingWindow<int>(3);
+        var window = SlidingWindowBuilder.Create<int>(3);
 
         Assert.Empty(window.GetItems());
 
@@ -33,7 +65,7 @@ public class SlidingWindowTests
     [Fact]
     public void TestSlidingWindowClear()
     {
-        var window = new SlidingWindow<int>(3);
+        var window = SlidingWindowBuilder.Create<int>(3);
         window.Add(1);
         window.Add(2);
         window.Add(3);
@@ -49,5 +81,31 @@ public class SlidingWindowTests
 
         window.Add(5);
         Assert.Equal([4, 5], window.GetItems());
-    }   
+    }
+
+    [Fact]
+    public void TestSlidingWindowClearAfterSliding()
+    {
+        var window = SlidingWindowBuilder.Create<int>(3);
+        window.Add(1);
+        window.Add(2);
+        window.Add(3);
+        window.Add(4); // window is now sliding: [2, 3, 4]
+
+        window.Clear();
+        Assert.Empty(window.GetItems());
+
+        // State is fully reset — should behave like a new window
+        window.Add(10);
+        Assert.Equal([10], window.GetItems());
+
+        window.Add(20);
+        Assert.Equal([10, 20], window.GetItems());
+
+        window.Add(30);
+        Assert.Equal([10, 20, 30], window.GetItems());
+
+        window.Add(40);
+        Assert.Equal([20, 30, 40], window.GetItems());
+    }
 }
