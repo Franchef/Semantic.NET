@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Sequences/" />
+    <Folder Include="Statistic/" />
   </ItemGroup>
 
 </Project>

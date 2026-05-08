@@ -1,31 +1,29 @@
-using System;
-
 namespace Semantic.Sequences;
 
 public static class PatternMatchesBuilder
 {
-    public static Builder StartsWith(int firstElement)
+    public static Builder<T> StartsWith<T>(T firstElement)
     {
-        return new Builder(firstElement);
+        return new Builder<T>(firstElement);
     }
-    public sealed class Builder
+    public sealed class Builder<T>
     {
-        IList<int> _matches = new List<int>();
-        internal Builder(int firstElement)
+        IList<T> _matches = new List<T>();
+        internal Builder(T firstElement)
         {
             _matches.Add(firstElement);
         }
 
-        public Builder ContinuesWith(int nextElement)
+        public Builder<T> ContinuesWith(T nextElement)
         {
             _matches.Add(nextElement);
             return this;
         }
 
-        public IPatternMatches EndsWith(int lastElement)
+        public IPatternMatches<T> EndsWith(T lastElement)
         {
             _matches.Add(lastElement);
-            return new PatternMatches(_matches);
+            return new PatternMatches<T>(_matches);
         }
     }
 }

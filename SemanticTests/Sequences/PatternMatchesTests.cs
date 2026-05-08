@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using Semantic.Sequences;
 
 namespace SemanticTests.Sequences
@@ -67,6 +66,23 @@ namespace SemanticTests.Sequences
             // Now feed a wrong value after reset
             pattern.Next(99); // Should hit the else branch after reset
             Assert.False(pattern.HasMatch());
+        }
+        [Fact]
+        public void TestPatternMatches_MatchedEventIsRaised()
+        {
+            var pattern = PatternMatchesBuilder.StartsWith(1)
+                .ContinuesWith(2)
+                .EndsWith(3);
+
+            bool eventRaised = false;
+            pattern.Matched += (s, e) => eventRaised = true;
+
+            pattern.Next(1);
+            Assert.False(eventRaised);
+            pattern.Next(2);
+            Assert.False(eventRaised);
+            pattern.Next(3);
+            Assert.True(eventRaised);
         }
     }
 }
