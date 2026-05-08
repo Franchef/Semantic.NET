@@ -2,7 +2,13 @@ namespace Semantic.Sequences;
 
 public static class PatternMatchesBuilder
 {
-    public static IPatternMatches<T> Create<T>(params T[] pattern) => new PatternMatches<T>(pattern);
+    public static IPatternMatches<T> Create<T>(params T[] pattern)
+    {
+        ArgumentNullException.ThrowIfNull(pattern);
+        if (pattern.Length == 0)
+            throw new ArgumentException("Pattern must not be empty.", nameof(pattern));
+        return new PatternMatches<T>(pattern);
+    }
     public static Builder<T> StartsWith<T>(T firstElement)
     {
         return new Builder<T>(firstElement);
