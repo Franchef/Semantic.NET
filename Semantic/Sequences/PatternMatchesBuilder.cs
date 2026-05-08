@@ -2,6 +2,7 @@ namespace Semantic.Sequences;
 
 public static class PatternMatchesBuilder
 {
+    public static IPatternMatches<T> Create<T>(params T[] pattern) => new PatternMatches<T>(pattern);
     public static Builder<T> StartsWith<T>(T firstElement)
     {
         return new Builder<T>(firstElement);
