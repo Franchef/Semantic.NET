@@ -84,5 +84,29 @@ namespace SemanticTests.Sequences
             pattern.Next(3);
             Assert.True(eventRaised);
         }
+
+        [Fact]
+        public void TestCreate_ThrowsOnNullPattern()
+        {
+            Assert.Throws<ArgumentNullException>(() => PatternMatchesBuilder.Create<int>(null!));
+        }
+
+        [Fact]
+        public void TestCreate_ThrowsOnEmptyPattern()
+        {
+            Assert.Throws<ArgumentException>(() => PatternMatchesBuilder.Create<int>());
+        }
+
+        [Fact]
+        public void TestCreate_ValidPattern()
+        {
+            var pattern = PatternMatchesBuilder.Create(1, 2, 3);
+            Assert.NotNull(pattern);
+            Assert.False(pattern.HasMatch());
+            pattern.Next(1);
+            pattern.Next(2);
+            pattern.Next(3);
+            Assert.True(pattern.HasMatch());
+        }
     }
 }

@@ -11,7 +11,10 @@ internal class PatternMatches<T> : IPatternMatches<T>
 
     public PatternMatches(IEnumerable<T> pattern)
     {
+        ArgumentNullException.ThrowIfNull(pattern);
         _pattern = pattern.ToArray();
+        if (_pattern.Length == 0)
+            throw new ArgumentException("Pattern must not be empty.", nameof(pattern));
     }
 
     public bool HasMatch()
