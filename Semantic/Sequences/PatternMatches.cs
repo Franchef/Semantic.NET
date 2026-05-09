@@ -1,5 +1,3 @@
-using System.Buffers;
-
 namespace Semantic.Sequences;
 
 internal class PatternMatches<T> : IPatternMatches<T>
