@@ -34,6 +34,7 @@ jobs:
           --no-build
           --configuration Release
           --collect:"XPlat Code Coverage"
+          --logger "trx;LogFileName=test-results.trx"
           --settings coverlet.runsettings
           --results-directory coverage
 
@@ -51,6 +52,7 @@ jobs:
         uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/**/*.trx
           
       - name: Upload coverage to Codecov
         if: always()
