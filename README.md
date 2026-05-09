@@ -1,5 +1,8 @@
 # Semantic.NET
 
+[![CI](https://github.com/Franchef/Semantic.NET/actions/workflows/ci.yml/badge.svg)](https://github.com/Franchef/Semantic.NET/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Franchef/Semantic.NET/branch/main/graph/badge.svg)](https://codecov.io/gh/Franchef/Semantic.NET)
+
 Semantic.NET provides semantic utilities for common programming scenarios, enabling developers to write expressive and intention-revealing code.
 
 ## Project Scope
