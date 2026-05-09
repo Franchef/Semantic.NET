@@ -6,7 +6,7 @@ namespace SemanticBenchmarks.Sequences;
 [MemoryDiagnoser]
 public class PatternMatchesBenchmarks
 {
-    private IPatternMatches<int> _matcher = null!;
+    private int[] _pattern = null!;
     private int[] _inputNoMatch = null!;
     private int[] _inputWithMatch = null!;
 
@@ -19,8 +19,7 @@ public class PatternMatchesBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        var pattern = Enumerable.Range(1, PatternLength).ToArray();
-        _matcher = PatternMatchesBuilder.Create(pattern);
+        _pattern = Enumerable.Range(1, PatternLength).ToArray();
 
         // Input that never matches (all zeros)
         _inputNoMatch = new int[InputLength];
@@ -29,27 +28,29 @@ public class PatternMatchesBenchmarks
         _inputWithMatch = new int[InputLength];
         for (int i = 0; i < PatternLength; i++)
         {
-            _inputWithMatch[InputLength - PatternLength + i] = pattern[i];
+            _inputWithMatch[InputLength - PatternLength + i] = _pattern[i];
         }
     }
 
     [Benchmark]
     public bool FeedNoMatch()
     {
+        var matcher = PatternMatchesBuilder.Create(_pattern);
         foreach (var item in _inputNoMatch)
         {
-            _matcher.Next(item);
+            matcher.Next(item);
         }
-        return _matcher.HasMatch();
+        return matcher.HasMatch();
     }
 
     [Benchmark]
     public bool FeedWithMatch()
     {
+        var matcher = PatternMatchesBuilder.Create(_pattern);
         foreach (var item in _inputWithMatch)
         {
-            _matcher.Next(item);
+            matcher.Next(item);
         }
-        return _matcher.HasMatch();
+        return matcher.HasMatch();
     }
 }
