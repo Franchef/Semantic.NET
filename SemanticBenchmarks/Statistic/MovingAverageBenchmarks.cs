@@ -19,9 +19,6 @@ public class MovingAverageBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        _movingAverage = MovingAverageBuilder.Create(WindowSize);
-        _movingAverageCustomStep = MovingAverageBuilder.CreateCustomStep(WindowSize, WindowSize / 2 > 0 ? WindowSize / 2 : 1);
-
         var rng = new Random(42);
         _data = new double[DataLength];
         for (int i = 0; i < DataLength; i++)
