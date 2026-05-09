@@ -1,6 +1,8 @@
 using Semantic.Sequences;
 using Semantic.Statistic;
 
+const double Tolerance = 0.0001d;
+
 var pattern = PatternMatchesBuilder.Create(1, 2, 3);
 pattern.Next(1);
 pattern.Next(2);
@@ -25,7 +27,7 @@ var movingAverage = MovingAverageBuilder.Create(3);
 movingAverage.Add(1);
 movingAverage.Add(2);
 movingAverage.Add(3);
-if (Math.Abs(movingAverage.CurrentAverage - 2) > 0.0001d)
+if (Math.Abs(movingAverage.CurrentAverage - 2) > Tolerance)
 {
     throw new InvalidOperationException("MovingAverageBuilder smoke test failed.");
 }
