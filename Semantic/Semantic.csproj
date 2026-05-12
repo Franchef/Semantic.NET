@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Folder Include="Sequences/" />
+    <Folder Include="StateMachines/" />
     <Folder Include="Statistic/" />
   </ItemGroup>
 
