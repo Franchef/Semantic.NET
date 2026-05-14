@@ -24,6 +24,6 @@ public class MooreBuilder<T> where T : struct, Enum
 
     public Moore<T> Create()
     {
-        return new Moore<T>(initialState);
+        return new Moore<T>(initialState, _stateOutputs);
     }
 }
