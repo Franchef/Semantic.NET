@@ -17,8 +17,13 @@ public class MooreTests
     public void MooreStateMachine_ShouldHaveCurrentState()
     {
         // Arrange
-        var mooreMachine = Moore<TestStates>.Builder(TestStates.StateA)
-            .Create();
+        var mooreMachineBuilder = Moore<TestStates>.Builder(TestStates.StateA);
+
+        mooreMachineBuilder.WithState(TestStates.StateA, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition());
+        mooreMachineBuilder.WithState(TestStates.StateB, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition());
+        mooreMachineBuilder.WithState(TestStates.StateC, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition());
+
+        var mooreMachine = mooreMachineBuilder.Create();
 
         // Act
         var currentState = mooreMachine.CurrentState;
@@ -34,6 +39,7 @@ public class MooreTests
         var builder = Moore<TestStates>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition())
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition())
+            .WithState(TestStates.StateC, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition())
             .WithTransition(TestStates.StateA, "toB", TestStates.StateB)
             .WithTransition(TestStates.StateB, "toA", TestStates.StateA);
 

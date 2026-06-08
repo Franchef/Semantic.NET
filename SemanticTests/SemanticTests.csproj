@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <RunSettingsFilePath>../coverlet.runsettings</RunSettingsFilePath>
+    <RunSettingsFilePath>$(MSBuildThisFileDirectory)..\coverlet.runsettings</RunSettingsFilePath>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
