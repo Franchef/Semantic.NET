@@ -86,6 +86,26 @@ namespace SemanticTests.Sequences
         }
 
         [Fact]
+        public async Task TestPatternMatches_ConcurrentAccess_DoesNotThrow()
+        {
+            var pattern = PatternMatchesBuilder.StartsWith(1)
+                .ContinuesWith(2)
+                .EndsWith(3);
+
+            var tasks = Enumerable.Range(0, Environment.ProcessorCount)
+                .Select(worker => Task.Run(() =>
+                {
+                    for (int i = 0; i < 10_000; i++)
+                    {
+                        pattern.Next((i % 3) + 1);
+                        _ = pattern.HasMatch();
+                    }
+                }));
+
+            await Task.WhenAll(tasks);
+        }
+
+        [Fact]
         public void TestCreate_ThrowsOnNullPattern()
         {
             Assert.Throws<ArgumentNullException>(() => PatternMatchesBuilder.Create<int>(null!));

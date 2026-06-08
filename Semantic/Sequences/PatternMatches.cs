@@ -3,6 +3,7 @@ namespace Semantic.Sequences;
 internal class PatternMatches<T> : IPatternMatches<T>
 {
     private readonly T[] _pattern;
+    private readonly object _syncRoot = new();
     private int _currentIndex = 0;
 
     public event EventHandler? Matched;
@@ -17,27 +18,37 @@ internal class PatternMatches<T> : IPatternMatches<T>
 
     public bool HasMatch()
     {
-        return _currentIndex == _pattern.Length;
+        lock (_syncRoot)
+        {
+            return _currentIndex == _pattern.Length;
+        }
     }
 
     public void Next(T item)
     {
-        if (_currentIndex == _pattern.Length)
-        {
-            _currentIndex = 0;
-        }
+        EventHandler? matched = null;
 
-        if (EqualityComparer<T>.Default.Equals(_pattern[_currentIndex], item))
+        lock (_syncRoot)
         {
-            _currentIndex++;
             if (_currentIndex == _pattern.Length)
             {
-                Matched?.Invoke(this, EventArgs.Empty);
+                _currentIndex = 0;
+            }
+
+            if (EqualityComparer<T>.Default.Equals(_pattern[_currentIndex], item))
+            {
+                _currentIndex++;
+                if (_currentIndex == _pattern.Length)
+                {
+                    matched = Matched;
+                }
+            }
+            else
+            {
+                _currentIndex = 0; // Reset if the sequence breaks
             }
         }
-        else
-        {
-            _currentIndex = 0; // Reset if the sequence breaks
-        }
+
+        matched?.Invoke(this, EventArgs.Empty);
     }
 }
