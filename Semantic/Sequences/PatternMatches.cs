@@ -3,7 +3,10 @@ namespace Semantic.Sequences;
 internal class PatternMatches<T> : IPatternMatches<T>
 {
     private readonly T[] _pattern;
+    private readonly object _syncRoot = new();
+    private readonly int[] _longestPrefixSuffix;
     private int _currentIndex = 0;
+    private bool _hasMatch;
 
     public event EventHandler? Matched;
 
@@ -13,31 +16,73 @@ internal class PatternMatches<T> : IPatternMatches<T>
         _pattern = pattern.ToArray();
         if (_pattern.Length == 0)
             throw new ArgumentException("Pattern must not be empty.", nameof(pattern));
+        _longestPrefixSuffix = BuildLongestPrefixSuffix(_pattern);
     }
 
     public bool HasMatch()
     {
-        return _currentIndex == _pattern.Length;
+        lock (_syncRoot)
+        {
+            return _hasMatch;
+        }
     }
 
     public void Next(T item)
     {
-        if (_currentIndex == _pattern.Length)
-        {
-            _currentIndex = 0;
-        }
+        EventHandler? matched = null;
 
-        if (EqualityComparer<T>.Default.Equals(_pattern[_currentIndex], item))
+        lock (_syncRoot)
         {
-            _currentIndex++;
+            _hasMatch = false;
+
+            while (
+                _currentIndex > 0 &&
+                !EqualityComparer<T>.Default.Equals(_pattern[_currentIndex], item)
+            )
+            {
+                _currentIndex = _longestPrefixSuffix[_currentIndex - 1];
+            }
+
+            if (EqualityComparer<T>.Default.Equals(_pattern[_currentIndex], item))
+            {
+                _currentIndex++;
+            }
+
             if (_currentIndex == _pattern.Length)
             {
-                Matched?.Invoke(this, EventArgs.Empty);
+                _hasMatch = true;
+                matched = Matched;
+                _currentIndex = _longestPrefixSuffix[_currentIndex - 1];
             }
         }
-        else
+
+        matched?.Invoke(this, EventArgs.Empty);
+    }
+
+    private static int[] BuildLongestPrefixSuffix(T[] pattern)
+    {
+        var result = new int[pattern.Length];
+        var length = 0;
+
+        for (var i = 1; i < pattern.Length;)
         {
-            _currentIndex = 0; // Reset if the sequence breaks
+            if (EqualityComparer<T>.Default.Equals(pattern[i], pattern[length]))
+            {
+                length++;
+                result[i] = length;
+                i++;
+            }
+            else if (length > 0)
+            {
+                length = result[length - 1];
+            }
+            else
+            {
+                result[i] = 0;
+                i++;
+            }
         }
+
+        return result;
     }
 }

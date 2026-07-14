@@ -34,6 +34,7 @@ internal sealed class SlidingWindow<T> : ISlidingWindow<T>
 
     public void Clear()
     {
+        Array.Clear(_items);
         _index = -1;
         _isSliding = false;
     }

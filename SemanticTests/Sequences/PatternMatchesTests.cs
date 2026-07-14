@@ -86,6 +86,26 @@ namespace SemanticTests.Sequences
         }
 
         [Fact]
+        public async Task TestPatternMatches_ConcurrentAccess_DoesNotThrow()
+        {
+            var pattern = PatternMatchesBuilder.StartsWith(1)
+                .ContinuesWith(2)
+                .EndsWith(3);
+
+            var tasks = Enumerable.Range(0, Environment.ProcessorCount)
+                .Select(worker => Task.Run(() =>
+                {
+                    for (int i = 0; i < 10_000; i++)
+                    {
+                        pattern.Next((i % 3) + 1);
+                        _ = pattern.HasMatch();
+                    }
+                }));
+
+            await Task.WhenAll(tasks);
+        }
+
+        [Fact]
         public void TestCreate_ThrowsOnNullPattern()
         {
             Assert.Throws<ArgumentNullException>(() => PatternMatchesBuilder.Create<int>(null!));
@@ -106,6 +126,37 @@ namespace SemanticTests.Sequences
             pattern.Next(1);
             pattern.Next(2);
             pattern.Next(3);
+            Assert.True(pattern.HasMatch());
+        }
+
+        [Fact]
+        public void TestPatternMatches_HandlesOverlapAfterMismatch()
+        {
+            var pattern = PatternMatchesBuilder.Create(1, 2, 3);
+
+            pattern.Next(1);
+            pattern.Next(2);
+            pattern.Next(1);
+            Assert.False(pattern.HasMatch());
+
+            pattern.Next(2);
+            Assert.False(pattern.HasMatch());
+
+            pattern.Next(3);
+            Assert.True(pattern.HasMatch());
+        }
+
+        [Fact]
+        public void TestPatternMatches_HandlesRepeatedPrefixPattern()
+        {
+            var pattern = PatternMatchesBuilder.Create(1, 1, 2);
+
+            pattern.Next(1);
+            pattern.Next(1);
+            pattern.Next(1);
+            Assert.False(pattern.HasMatch());
+
+            pattern.Next(2);
             Assert.True(pattern.HasMatch());
         }
     }
