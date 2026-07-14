@@ -9,34 +9,37 @@ namespace Semantic.StateMachines;
 public class Moore<T> : StateMachine<T> where T : struct, Enum
 {
     private readonly Dictionary<T, Func<object, Transition<T>>> _stateOutputs;
+    private readonly Dictionary<(T State, object Input), T> _transitions;
 
     public static MooreBuilder<T> Builder(T initialState) => new MooreBuilder<T>(initialState);
+    public static MooreBuilder<T, TInput> Builder<TInput>(T initialState)
+        where TInput : notnull => new(initialState);
 
-    internal Moore(T initialState, 
-    Dictionary<T, Func<object, Transition<T>>> stateOutputs)
+    internal Moore(
+        T initialState,
+        Dictionary<T, Func<object, Transition<T>>> stateOutputs,
+        Dictionary<(T State, object Input), T> transitions
+    )
     {
-        foreach (var state in Enum.GetValues<T>())
-        {
-            if(stateOutputs.ContainsKey(state)) continue;
-                throw new ArgumentException($"State {state} is not defined in the state outputs.");
-        }
-        _stateOutputs = stateOutputs;
+        ArgumentNullException.ThrowIfNull(stateOutputs);
+        ArgumentNullException.ThrowIfNull(transitions);
+
+        StateMachineRuntime.EnsureAllStatesHaveOutputs(stateOutputs);
+        _stateOutputs = new Dictionary<T, Func<object, Transition<T>>>(stateOutputs);
+        _transitions = new Dictionary<(T State, object Input), T>(transitions);
         CurrentState = initialState;
     }
 
     public void ProcessInput(object input)
     {
-        if (_stateOutputs.TryGetValue(CurrentState, out var outputFunc))
-        {
-            var transition = outputFunc(input);
-            if(transition.State is not null && !EqualityComparer<T>.Default.Equals(transition.State.Value, CurrentState))
-            {
-                CurrentState = transition.State.Value;
-            }
-        }
-        else
-        {
-            throw new InvalidOperationException($"No transition defined from state {CurrentState} on input {input}");
-        }
+        ArgumentNullException.ThrowIfNull(input);
+
+        StateMachineRuntime.ProcessMooreInput(
+            CurrentState,
+            input,
+            _transitions,
+            _stateOutputs,
+            nextState => CurrentState = nextState
+        );
     }
 }
