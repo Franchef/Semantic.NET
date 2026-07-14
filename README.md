@@ -35,6 +35,22 @@ if (pattern.HasMatch())
 
 See the unit tests in `SemanticTests/Sequences/PatternMatchesTests.cs` for more usage details.
 
+## Example: Sliding Window Utility
+
+```csharp
+var window = SlidingWindowBuilder.Create<int>(3);
+
+window.Add(10);
+window.Add(20);
+window.Add(30);
+// [10, 20, 30]
+
+window.Add(40);
+// [20, 30, 40]
+
+var items = window.GetItems();
+```
+
 ## Example: Semantic State Machine Builders
 
 State machines can also be configured with a fluent API that guides transition definitions:
@@ -47,6 +63,9 @@ var machine = Moore<MyState>.Builder(MyState.Idle)
     .From(MyState.Idle).On("start").GoTo(MyState.Running)
     .From(MyState.Running).On("stop").GoTo(MyState.Stopped)
     .Build();
+
+machine.ProcessInput("start");
+// machine.CurrentState == MyState.Running
 ```
 
 For Mealy machines, each transition concludes with an explicit output:
@@ -56,16 +75,31 @@ var mealy = Mealy<MyState>.Builder(MyState.Idle)
     .From(MyState.Idle).On("start").GoTo(MyState.Running).Emits("started")
     .From(MyState.Running).On("stop").GoTo(MyState.Idle).Emits("stopped")
     .Build();
+
+var output = mealy.ProcessInput("start");
+// output == "started"
 ```
 
 Typed variants are available when you want compile-time safety on inputs and outputs:
 
 ```csharp
+var typedMoore = Moore<MyState, string>.Builder(MyState.Idle)
+    .WithState(MyState.Idle, _ => StateMachine<MyState>.NoTransition())
+    .WithState(MyState.Running, _ => StateMachine<MyState>.NoTransition())
+    .WithState(MyState.Stopped, _ => StateMachine<MyState>.NoTransition())
+    .From(MyState.Idle).On("start").GoTo(MyState.Running)
+    .Build();
+
 var typedMealy = Mealy<MyState, string, int>.Builder(MyState.Idle)
     .From(MyState.Idle).On("start").GoTo(MyState.Running).Emits(1)
     .From(MyState.Running).On("stop").GoTo(MyState.Idle).Emits(0)
     .Build();
+
+int signal = typedMealy.ProcessInput("start");
+// signal == 1
 ```
+
+See `SemanticTests/StateMachines/MooreTests.cs` and `SemanticTests/StateMachines/MaleyTests.cs` for complete scenarios and edge cases.
 
 ---
 This project is in active development. More semantic utilities will be added to cover additional common scenarios.
