@@ -35,5 +35,37 @@ if (pattern.HasMatch())
 
 See the unit tests in `SemanticTests/Sequences/PatternMatchesTests.cs` for more usage details.
 
+## Example: Semantic State Machine Builders
+
+State machines can also be configured with a fluent API that guides transition definitions:
+
+```csharp
+var machine = Moore<MyState>.Builder(MyState.Idle)
+    .WithState(MyState.Idle, _ => StateMachine<MyState>.NoTransition())
+    .WithState(MyState.Running, _ => StateMachine<MyState>.NoTransition())
+    .WithState(MyState.Stopped, _ => StateMachine<MyState>.NoTransition())
+    .From(MyState.Idle).On("start").GoTo(MyState.Running)
+    .From(MyState.Running).On("stop").GoTo(MyState.Stopped)
+    .Build();
+```
+
+For Mealy machines, each transition concludes with an explicit output:
+
+```csharp
+var mealy = Mealy<MyState>.Builder(MyState.Idle)
+    .From(MyState.Idle).On("start").GoTo(MyState.Running).Emits("started")
+    .From(MyState.Running).On("stop").GoTo(MyState.Idle).Emits("stopped")
+    .Build();
+```
+
+Typed variants are available when you want compile-time safety on inputs and outputs:
+
+```csharp
+var typedMealy = Mealy<MyState, string, int>.Builder(MyState.Idle)
+    .From(MyState.Idle).On("start").GoTo(MyState.Running).Emits(1)
+    .From(MyState.Running).On("stop").GoTo(MyState.Idle).Emits(0)
+    .Build();
+```
+
 ---
 This project is in active development. More semantic utilities will be added to cover additional common scenarios.
