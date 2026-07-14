@@ -128,5 +128,36 @@ namespace SemanticTests.Sequences
             pattern.Next(3);
             Assert.True(pattern.HasMatch());
         }
+
+        [Fact]
+        public void TestPatternMatches_HandlesOverlapAfterMismatch()
+        {
+            var pattern = PatternMatchesBuilder.Create(1, 2, 3);
+
+            pattern.Next(1);
+            pattern.Next(2);
+            pattern.Next(1);
+            Assert.False(pattern.HasMatch());
+
+            pattern.Next(2);
+            Assert.False(pattern.HasMatch());
+
+            pattern.Next(3);
+            Assert.True(pattern.HasMatch());
+        }
+
+        [Fact]
+        public void TestPatternMatches_HandlesRepeatedPrefixPattern()
+        {
+            var pattern = PatternMatchesBuilder.Create(1, 1, 2);
+
+            pattern.Next(1);
+            pattern.Next(1);
+            pattern.Next(1);
+            Assert.False(pattern.HasMatch());
+
+            pattern.Next(2);
+            Assert.True(pattern.HasMatch());
+        }
     }
 }
