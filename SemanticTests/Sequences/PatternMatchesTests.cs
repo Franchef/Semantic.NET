@@ -7,7 +7,7 @@ namespace SemanticTests.Sequences
         [Fact]
         public void TestPatternMatches()
         {
-            var pattern = PatternMatchesBuilder.StartsWith(1)
+            IPatternMatches<int> pattern = PatternMatchesBuilder.StartsWith(1)
                 .ContinuesWith(2)
                 .EndsWith(3);
 
@@ -30,7 +30,7 @@ namespace SemanticTests.Sequences
         [Fact]
         public void TestPatternMatches_ResetOnMismatch()
         {
-            var pattern = PatternMatchesBuilder.StartsWith(1)
+            IPatternMatches<int> pattern = PatternMatchesBuilder.StartsWith(1)
                 .ContinuesWith(2)
                 .EndsWith(3);
 
@@ -53,7 +53,7 @@ namespace SemanticTests.Sequences
         [Fact]
         public void TestPatternMatches_ResetAfterMatchAndMismatch()
         {
-            var pattern = PatternMatchesBuilder.StartsWith(1)
+            IPatternMatches<int> pattern = PatternMatchesBuilder.StartsWith(1)
                 .ContinuesWith(2)
                 .EndsWith(3);
 
@@ -70,7 +70,7 @@ namespace SemanticTests.Sequences
         [Fact]
         public void TestPatternMatches_MatchedEventIsRaised()
         {
-            var pattern = PatternMatchesBuilder.StartsWith(1)
+            IPatternMatches<int> pattern = PatternMatchesBuilder.StartsWith(1)
                 .ContinuesWith(2)
                 .EndsWith(3);
 
@@ -88,11 +88,11 @@ namespace SemanticTests.Sequences
         [Fact]
         public async Task TestPatternMatches_ConcurrentAccess_DoesNotThrow()
         {
-            var pattern = PatternMatchesBuilder.StartsWith(1)
+            IPatternMatches<int> pattern = PatternMatchesBuilder.StartsWith(1)
                 .ContinuesWith(2)
                 .EndsWith(3);
 
-            var tasks = Enumerable.Range(0, Environment.ProcessorCount)
+            IEnumerable<Task> tasks = Enumerable.Range(0, Environment.ProcessorCount)
                 .Select(worker => Task.Run(() =>
                 {
                     for (int i = 0; i < 10_000; i++)
@@ -120,7 +120,7 @@ namespace SemanticTests.Sequences
         [Fact]
         public void TestCreate_ValidPattern()
         {
-            var pattern = PatternMatchesBuilder.Create(1, 2, 3);
+            IPatternMatches<int> pattern = PatternMatchesBuilder.Create(1, 2, 3);
             Assert.NotNull(pattern);
             Assert.False(pattern.HasMatch());
             pattern.Next(1);
@@ -132,7 +132,7 @@ namespace SemanticTests.Sequences
         [Fact]
         public void TestPatternMatches_HandlesOverlapAfterMismatch()
         {
-            var pattern = PatternMatchesBuilder.Create(1, 2, 3);
+            IPatternMatches<int> pattern = PatternMatchesBuilder.Create(1, 2, 3);
 
             pattern.Next(1);
             pattern.Next(2);
@@ -149,7 +149,7 @@ namespace SemanticTests.Sequences
         [Fact]
         public void TestPatternMatches_HandlesRepeatedPrefixPattern()
         {
-            var pattern = PatternMatchesBuilder.Create(1, 1, 2);
+            IPatternMatches<int> pattern = PatternMatchesBuilder.Create(1, 1, 2);
 
             pattern.Next(1);
             pattern.Next(1);

@@ -15,14 +15,14 @@ public class SlidingWindowTests
     [Fact]
     public void TestSlidingWindowSizeProperty()
     {
-        var window = SlidingWindowBuilder.Create<int>(5);
+        ISlidingWindow<int> window = SlidingWindowBuilder.Create<int>(5);
         Assert.Equal(5, window.Size);
     }
 
     [Fact]
     public void TestSlidingWindowSizeOne()
     {
-        var window = SlidingWindowBuilder.Create<int>(1);
+        ISlidingWindow<int> window = SlidingWindowBuilder.Create<int>(1);
 
         Assert.Empty(window.GetItems());
 
@@ -40,7 +40,7 @@ public class SlidingWindowTests
     [Fact]
     public void TestSlidingWindow()
     {
-        var window = SlidingWindowBuilder.Create<int>(3);
+        ISlidingWindow<int> window = SlidingWindowBuilder.Create<int>(3);
 
         Assert.Empty(window.GetItems());
 
@@ -65,7 +65,7 @@ public class SlidingWindowTests
     [Fact]
     public void TestSlidingWindowClear()
     {
-        var window = SlidingWindowBuilder.Create<int>(3);
+        ISlidingWindow<int> window = SlidingWindowBuilder.Create<int>(3);
         window.Add(1);
         window.Add(2);
         window.Add(3);
@@ -86,7 +86,7 @@ public class SlidingWindowTests
     [Fact]
     public void TestSlidingWindowClearAfterSliding()
     {
-        var window = SlidingWindowBuilder.Create<int>(3);
+        ISlidingWindow<int> window = SlidingWindowBuilder.Create<int>(3);
         window.Add(1);
         window.Add(2);
         window.Add(3);

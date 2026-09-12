@@ -48,7 +48,7 @@ internal sealed class SlidingWindow<T> : ISlidingWindow<T>
         if(_isSliding)
         {
             var result = new T[Size];
-            var oldestIndex = (_index + 1) % Size;
+            int oldestIndex = (_index + 1) % Size;
 
             Array.Copy(_items, oldestIndex, result, 0, Size - oldestIndex);
             if(oldestIndex > 0)

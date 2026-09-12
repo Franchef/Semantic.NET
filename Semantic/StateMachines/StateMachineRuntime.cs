@@ -7,7 +7,7 @@ internal static class StateMachineRuntime
     )
         where TState : struct, Enum
     {
-        foreach (var state in Enum.GetValues<TState>())
+        foreach (TState state in Enum.GetValues<TState>())
         {
             if (!stateOutputs.ContainsKey(state))
             {
@@ -42,7 +42,7 @@ internal static class StateMachineRuntime
         where TState : struct, Enum
         where TInput : notnull
     {
-        if (transitions.TryGetValue((currentState, input), out var nextState))
+        if (transitions.TryGetValue((currentState, input), out TState nextState))
         {
             if (!EqualityComparer<TState>.Default.Equals(nextState, currentState))
             {
@@ -51,14 +51,14 @@ internal static class StateMachineRuntime
             return;
         }
 
-        if (!stateOutputs.TryGetValue(currentState, out var outputFunc))
+        if (!stateOutputs.TryGetValue(currentState, out Func<TInput, StateMachine<TState>.Transition<TState>>? outputFunc))
         {
             throw new InvalidOperationException(
                 $"No transition defined from state {currentState} on input {input}."
             );
         }
 
-        var transition = outputFunc(input)
+        StateMachine<TState>.Transition<TState> transition = outputFunc(input)
             ?? throw new InvalidOperationException(
                 $"Output function for state {currentState} returned null transition."
             );
@@ -83,14 +83,14 @@ internal static class StateMachineRuntime
         where TState : struct, Enum
         where TInput : notnull
     {
-        if (!transitions.TryGetValue((currentState, input), out var transition))
+        if (!transitions.TryGetValue((currentState, input), out TTransition? transition))
         {
             throw new InvalidOperationException(
                 $"No transition defined from state {currentState} on input {input}."
             );
         }
 
-        var nextState = getToState(transition);
+        TState nextState = getToState(transition);
         if (!EqualityComparer<TState>.Default.Equals(nextState, currentState))
         {
             setCurrentState(nextState);

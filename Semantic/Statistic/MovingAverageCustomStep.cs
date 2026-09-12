@@ -15,7 +15,7 @@ internal sealed class MovingAverageCustomStep : MovingAverage
 
     protected override void UpdateAverage()
     {
-        var items = _window.GetItems();
+        double[] items = _window.GetItems();
         if(items.Length < _sampleSize)
         {
             CurrentAverage = double.NaN;

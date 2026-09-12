@@ -15,7 +15,7 @@ public class MooreTests
     [Fact]
     public void StateMachineTransitionEvent_ShouldBeRaisedOnlyWhenStateChanges()
     {
-        var machine = Moore<TestStates>.Builder(TestStates.StateA)
+        Moore<TestStates> machine = Moore<TestStates>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.NoTransition())
@@ -44,7 +44,7 @@ public class MooreTests
     [Fact]
     public void MooreStateMachine_ShouldUseStateOutputWhenNoExplicitTransitionMatches()
     {
-        var machine = Moore<TestStates>.Builder(TestStates.StateA)
+        Moore<TestStates> machine = Moore<TestStates>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, input =>
                 Equals(input, "toC")
                     ? StateMachine<TestStates>.GoToState(TestStates.StateC)
@@ -62,7 +62,7 @@ public class MooreTests
     [Fact]
     public void MooreStateMachine_ShouldPreferExplicitTransitionOverStateOutputFallback()
     {
-        var machine = Moore<TestStates>.Builder(TestStates.StateA)
+        Moore<TestStates> machine = Moore<TestStates>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, input =>
                 Equals(input, "go")
                     ? StateMachine<TestStates>.GoToState(TestStates.StateC)
@@ -81,7 +81,7 @@ public class MooreTests
     [Fact]
     public void MooreStateMachine_ShouldHandleMultipleSequentialTransitions()
     {
-        var machine = Moore<TestStates>.Builder(TestStates.StateA)
+        Moore<TestStates> machine = Moore<TestStates>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.NoTransition())
@@ -100,7 +100,7 @@ public class MooreTests
     [Fact]
     public void MooreStateMachine_ShouldThrowWhenStateOutputReturnsNullTransition()
     {
-        var machine = Moore<TestStates>.Builder(TestStates.StateA)
+        Moore<TestStates> machine = Moore<TestStates>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => null!)
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.NoTransition())
@@ -112,7 +112,7 @@ public class MooreTests
     [Fact]
     public void MooreStateMachine_ShouldThrowOnNullInput()
     {
-        var machine = Moore<TestStates>.Builder(TestStates.StateA)
+        Moore<TestStates> machine = Moore<TestStates>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.NoTransition())
@@ -141,7 +141,7 @@ public class MooreTests
     [Fact]
     public void MooreBuilder_ShouldRejectDuplicateTransition()
     {
-        var builder = Moore<TestStates>.Builder(TestStates.StateA)
+        MooreBuilder<TestStates> builder = Moore<TestStates>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.NoTransition())
@@ -166,7 +166,7 @@ public class MooreTests
     [Fact]
     public void TypedMooreBuilder_ShouldRejectDuplicateTransition()
     {
-        var builder = Moore<TestStates, string>.Builder(TestStates.StateA)
+        MooreBuilder<TestStates, string> builder = Moore<TestStates, string>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.NoTransition())
@@ -180,7 +180,7 @@ public class MooreTests
     [Fact]
     public void TypedMooreStateMachine_ShouldThrowWhenStateOutputReturnsNullTransition()
     {
-        var machine = Moore<TestStates, string>.Builder(TestStates.StateA)
+        Moore<TestStates, string> machine = Moore<TestStates, string>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => null!)
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.NoTransition())
@@ -205,16 +205,16 @@ public class MooreTests
     public void MooreStateMachine_ShouldHaveCurrentState()
     {
         // Arrange
-        var mooreMachineBuilder = Moore<TestStates>.Builder(TestStates.StateB);
+        MooreBuilder<TestStates> mooreMachineBuilder = Moore<TestStates>.Builder(TestStates.StateB);
 
         mooreMachineBuilder.WithState(TestStates.StateA, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition());
         mooreMachineBuilder.WithState(TestStates.StateB, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition());
         mooreMachineBuilder.WithState(TestStates.StateC, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition());
 
-        var mooreMachine = mooreMachineBuilder.Create();
+        Moore<TestStates> mooreMachine = mooreMachineBuilder.Create();
 
         // Act
-        var currentState = mooreMachine.CurrentState;
+        TestStates currentState = mooreMachine.CurrentState;
 
         // Assert
         Assert.Equal(TestStates.StateB, currentState);
@@ -224,18 +224,18 @@ public class MooreTests
     public void MooreStateMachine_ShouldAllowStateTransitions()
     {
         // Arrange
-        var builder = Moore<TestStates>.Builder(TestStates.StateA)
+        MooreBuilder<TestStates> builder = Moore<TestStates>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition())
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition())
             .From(TestStates.StateA).On("toB").GoTo(TestStates.StateB)
             .From(TestStates.StateB).On("toA").GoTo(TestStates.StateA);
 
-        var mooreMachine = builder.Create();
+        Moore<TestStates> mooreMachine = builder.Create();
 
         // Act
         mooreMachine.ProcessInput("toB");
-        var currentState = mooreMachine.CurrentState;
+        TestStates currentState = mooreMachine.CurrentState;
 
         // Assert
         Assert.Equal(TestStates.StateB, currentState);
@@ -245,7 +245,7 @@ public class MooreTests
     public void MooreStateMachine_ShouldKeepStateWhenNoTransitionIsDefined()
     {
         // Arrange
-        var machine = Moore<TestStates>.Builder(TestStates.StateA)
+        Moore<TestStates> machine = Moore<TestStates>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition())
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.Transition<TestStates>.NoTransition())
@@ -261,7 +261,7 @@ public class MooreTests
     [Fact]
     public void TypedMooreStateMachine_ShouldApplyTypedTransition()
     {
-        var machine = Moore<TestStates, string>.Builder(TestStates.StateA)
+        Moore<TestStates, string> machine = Moore<TestStates, string>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.NoTransition())
@@ -276,7 +276,7 @@ public class MooreTests
     [Fact]
     public void TypedMooreStateMachine_ShouldUseStateOutputWhenNoExplicitTransitionMatches()
     {
-        var machine = Moore<TestStates, string>.Builder(TestStates.StateA)
+        Moore<TestStates, string> machine = Moore<TestStates, string>.Builder(TestStates.StateA)
             .WithState(TestStates.StateA, input =>
                 input == "toC"
                     ? StateMachine<TestStates>.GoToState(TestStates.StateC)
@@ -294,7 +294,7 @@ public class MooreTests
     [Fact]
     public void TypedMooreBuilderFromLegacyEntryPoint_ShouldWork()
     {
-        var machine = Moore<TestStates>.Builder<string>(TestStates.StateA)
+        Moore<TestStates, string> machine = Moore<TestStates>.Builder<string>(TestStates.StateA)
             .WithState(TestStates.StateA, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateB, _ => StateMachine<TestStates>.NoTransition())
             .WithState(TestStates.StateC, _ => StateMachine<TestStates>.NoTransition())

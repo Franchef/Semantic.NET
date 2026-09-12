@@ -3,7 +3,7 @@ namespace Semantic.Sequences;
 internal class PatternMatches<T> : IPatternMatches<T>
 {
     private readonly T[] _pattern;
-    private readonly object _syncRoot = new();
+    private readonly Lock _syncRoot = new();
     private readonly int[] _longestPrefixSuffix;
     private int _currentIndex = 0;
     private bool _hasMatch;
@@ -13,9 +13,12 @@ internal class PatternMatches<T> : IPatternMatches<T>
     public PatternMatches(IEnumerable<T> pattern)
     {
         ArgumentNullException.ThrowIfNull(pattern);
-        _pattern = pattern.ToArray();
+        _pattern = [.. pattern];
         if (_pattern.Length == 0)
+        {
             throw new ArgumentException("Pattern must not be empty.", nameof(pattern));
+        }
+
         _longestPrefixSuffix = BuildLongestPrefixSuffix(_pattern);
     }
 
@@ -61,10 +64,10 @@ internal class PatternMatches<T> : IPatternMatches<T>
 
     private static int[] BuildLongestPrefixSuffix(T[] pattern)
     {
-        var result = new int[pattern.Length];
-        var length = 0;
+        int[] result = new int[pattern.Length];
+        int length = 0;
 
-        for (var i = 1; i < pattern.Length;)
+        for (int i = 1; i < pattern.Length;)
         {
             if (EqualityComparer<T>.Default.Equals(pattern[i], pattern[length]))
             {

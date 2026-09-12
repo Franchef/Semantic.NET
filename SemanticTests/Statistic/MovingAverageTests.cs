@@ -15,14 +15,14 @@ public class MovingAverageTests
     [Fact]
     public void TestMovingAverageInitialState()
     {
-        var movingAverage = MovingAverageBuilder.Create(3);
+        IMovingAverage movingAverage = MovingAverageBuilder.Create(3);
         Assert.True(double.IsNaN(movingAverage.CurrentAverage));
     }
 
     [Fact]
     public void TestMovingAverageAverageUpdatedEvent()
     {
-        var movingAverage = MovingAverageBuilder.Create(3);
+        IMovingAverage movingAverage = MovingAverageBuilder.Create(3);
         var eventValues = new List<double>();
         movingAverage.AverageUpdated += (_, avg) => eventValues.Add(avg);
 
@@ -36,7 +36,7 @@ public class MovingAverageTests
     [Fact]
     public void TestMovingAverageSliding()
     {
-        var movingAverage = MovingAverageBuilder.Create(3);
+        IMovingAverage movingAverage = MovingAverageBuilder.Create(3);
         movingAverage.Add(1);
         movingAverage.Add(2);
         movingAverage.Add(3);
@@ -54,13 +54,13 @@ public class MovingAverageTests
     [Fact]
     public void TestMovingAverageWithNaNValues()
     {
-        var movingAverage = MovingAverageBuilder.Create(3);
+        IMovingAverage movingAverage = MovingAverageBuilder.Create(3);
         movingAverage.Add(double.NaN);
         movingAverage.Add(2);
         Assert.Equal(2, movingAverage.CurrentAverage); // NaN is skipped
 
         // All-NaN window should yield NaN
-        var allNaN = MovingAverageBuilder.Create(2);
+        IMovingAverage allNaN = MovingAverageBuilder.Create(2);
         allNaN.Add(double.NaN);
         allNaN.Add(double.NaN);
         Assert.True(double.IsNaN(allNaN.CurrentAverage));
@@ -69,7 +69,7 @@ public class MovingAverageTests
     [Fact]
     public void TestMovingAverage()
     {
-        var movingAverage = MovingAverageBuilder.Create(3);
+        IMovingAverage movingAverage = MovingAverageBuilder.Create(3);
         movingAverage.Add(1);
         movingAverage.Add(2);
         movingAverage.Add(3);
@@ -79,7 +79,7 @@ public class MovingAverageTests
     [Fact]
     public void TestMovingAverageCustomStep()
     {
-        var movingAverage = MovingAverageBuilder.CreateCustomStep(3, 2);
+        IMovingAverage movingAverage = MovingAverageBuilder.CreateCustomStep(3, 2);
         movingAverage.Add(1);
         Assert.True(double.IsNaN(movingAverage.CurrentAverage)); // Not enough data points yet
         movingAverage.Add(2);
@@ -98,7 +98,7 @@ public class MovingAverageTests
     [Fact]
     public void TestMovingAverageCustomStepAverageUpdatedEvent()
     {
-        var movingAverage = MovingAverageBuilder.CreateCustomStep(3, 2);
+        IMovingAverage movingAverage = MovingAverageBuilder.CreateCustomStep(3, 2);
         var eventValues = new List<double>();
         movingAverage.AverageUpdated += (_, avg) => eventValues.Add(avg);
 
@@ -113,7 +113,7 @@ public class MovingAverageTests
     public void TestMovingAverageCustomStepSliding()
     {
         // Window size 3, sample size 2: always averages the 2 most recent items
-        var movingAverage = MovingAverageBuilder.CreateCustomStep(3, 2);
+        IMovingAverage movingAverage = MovingAverageBuilder.CreateCustomStep(3, 2);
         movingAverage.Add(1);
         movingAverage.Add(2);
         movingAverage.Add(3); // window: [1, 2, 3] → avg of [2, 3] = 2.5

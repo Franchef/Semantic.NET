@@ -31,7 +31,7 @@ public class MovingAverageBenchmarks
     public double MovingAverageAdd()
     {
         _movingAverage = MovingAverageBuilder.Create(WindowSize);
-        foreach (var value in _data)
+        foreach (double value in _data)
         {
             _movingAverage.Add(value);
         }
@@ -42,7 +42,7 @@ public class MovingAverageBenchmarks
     public double MovingAverageCustomStepAdd()
     {
         _movingAverageCustomStep = MovingAverageBuilder.CreateCustomStep(WindowSize, WindowSize / 2 > 0 ? WindowSize / 2 : 1);
-        foreach (var value in _data)
+        foreach (double value in _data)
         {
             _movingAverageCustomStep.Add(value);
         }

@@ -34,7 +34,7 @@ internal class MovingAverage : IMovingAverage
 
     protected double GetAverage()
     {
-        var items = _window.GetItems();
+        double[] items = _window.GetItems();
         switch(items.Length)
         {
             case 0:

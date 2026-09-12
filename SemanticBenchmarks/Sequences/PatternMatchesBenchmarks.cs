@@ -35,8 +35,8 @@ public class PatternMatchesBenchmarks
     [Benchmark]
     public bool FeedNoMatch()
     {
-        var matcher = PatternMatchesBuilder.Create(_pattern);
-        foreach (var item in _inputNoMatch)
+        IPatternMatches<int> matcher = PatternMatchesBuilder.Create(_pattern);
+        foreach (int item in _inputNoMatch)
         {
             matcher.Next(item);
         }
@@ -46,8 +46,8 @@ public class PatternMatchesBenchmarks
     [Benchmark]
     public bool FeedWithMatch()
     {
-        var matcher = PatternMatchesBuilder.Create(_pattern);
-        foreach (var item in _inputWithMatch)
+        IPatternMatches<int> matcher = PatternMatchesBuilder.Create(_pattern);
+        foreach (int item in _inputWithMatch)
         {
             matcher.Next(item);
         }

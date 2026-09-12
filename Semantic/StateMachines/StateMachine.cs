@@ -30,7 +30,7 @@ public abstract class StateMachine<T> where T : struct, Enum
         protected set
         {
             T fromStatus = default;
-            var hasChanged = false;
+            bool hasChanged = false;
             EventHandler<TransitionEventArgs>? handler = null;
 
             lock (_stateLock)
