@@ -301,7 +301,7 @@ dotnet_diagnostic.CA1816.severity = none
 dotnet_diagnostic.CA1819.severity = none
 
 # CA1822: Mark members as static
-dotnet_diagnostic.CA1822.severity = none
+dotnet_diagnostic.CA1822.severity = warning
 
 # CA1848: Use the LoggerMessage delegates
 dotnet_diagnostic.CA1848.severity = none
@@ -344,6 +344,125 @@ dotnet_diagnostic.CS8603.severity = none
 
 # CS8618: Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 dotnet_diagnostic.CS8618.severity = none
+
+# #### Performance and Modern .NET Features ####
+
+# Style preferences for high performance
+csharp_style_prefer_readonly_struct = true:warning
+csharp_style_prefer_struct_member_readonly = true:warning
+csharp_style_prefer_utf8_string_literals = true:warning
+
+# .NET Performance Diagnostic rules
+# CA1806: Do not ignore method results
+dotnet_diagnostic.CA1806.severity = warning
+
+# CA1825: Avoid zero-length array allocations
+dotnet_diagnostic.CA1825.severity = warning
+
+# CA1826: Do not use Enumerable methods on indexable collections
+dotnet_diagnostic.CA1826.severity = warning
+
+# CA1827: Do not use Count() if Any() can be used
+dotnet_diagnostic.CA1827.severity = warning
+
+# CA1829: Use Length/Count property instead of Enumerable.Count() method
+dotnet_diagnostic.CA1829.severity = warning
+
+# CA1831: Use AsSpan or AsMemory instead of Range-based indexers on Span
+dotnet_diagnostic.CA1831.severity = warning
+
+# CA1832: Use AsSpan or AsMemory instead of Range-based indexers on Memory
+dotnet_diagnostic.CA1832.severity = warning
+
+# CA1833: Use AsSpan or AsMemory instead of Range-based indexers on Array
+dotnet_diagnostic.CA1833.severity = warning
+
+# CA1834: Use StringBuilder.Append(char) instead of StringBuilder.Append(string)
+dotnet_diagnostic.CA1834.severity = warning
+
+# CA1835: Prefer ReadOnlyMemory/Memory overloads for Stream async methods
+dotnet_diagnostic.CA1835.severity = warning
+
+# CA1838: Avoid StringBuilder parameters for P/Invokes
+dotnet_diagnostic.CA1838.severity = warning
+
+# CA1844: Provide Memory-based overrides of async methods on Stream
+dotnet_diagnostic.CA1844.severity = warning
+
+# CA1845: Use span-based string.Create instead of string.Concat
+dotnet_diagnostic.CA1845.severity = warning
+
+# CA1846: Prefer AsSpan over Substring
+dotnet_diagnostic.CA1846.severity = warning
+
+# CA1847: Use char overloads for string.IndexOf and string.StartsWith
+dotnet_diagnostic.CA1847.severity = warning
+
+# CA1851: Possible multiple enumerations of IEnumerable
+dotnet_diagnostic.CA1851.severity = warning
+
+# CA1852: Seal internal types (allows JIT devirtualization)
+dotnet_diagnostic.CA1852.severity = warning
+
+# CA1853: Unnecessary 'Cast' or 'OfType' call
+dotnet_diagnostic.CA1853.severity = warning
+
+# CA1854: Prefer IDictionary.TryGetValue
+dotnet_diagnostic.CA1854.severity = warning
+
+# CA1855: Use Span<T>.Clear() instead of Span<T>.Fill()
+dotnet_diagnostic.CA1855.severity = warning
+
+# CA1858: Use string.StartsWith instead of string.IndexOf
+dotnet_diagnostic.CA1858.severity = warning
+
+# CA1859: Use concrete types when possible for better performance
+dotnet_diagnostic.CA1859.severity = warning
+
+# CA1861: Avoid constant arrays as arguments
+dotnet_diagnostic.CA1861.severity = warning
+
+# CA1865: Use char overload instead of string overload for string.Method
+dotnet_diagnostic.CA1865.severity = warning
+
+# CA1866: Use char overload instead of string overload
+dotnet_diagnostic.CA1866.severity = warning
+
+# CA1867: Use char overload
+dotnet_diagnostic.CA1867.severity = warning
+
+# CA1868: Avoid unnecessary call to 'String.Substring' or 'String.Remove'
+dotnet_diagnostic.CA1868.severity = warning
+
+# CA1869: Cache JsonSerializerOptions instances
+dotnet_diagnostic.CA1869.severity = warning
+
+# CA1870: Use a cached 'SearchValues' instance
+dotnet_diagnostic.CA1870.severity = warning
+
+# CA1871: Do not pass a nullable struct to 'ArgumentNullException.ThrowIfNull'
+dotnet_diagnostic.CA1871.severity = warning
+
+# CA1872: Prefer 'Convert.ToHexString' or 'Convert.ToHexStringLower'
+dotnet_diagnostic.CA1872.severity = warning
+
+# CA1849: Call async methods when in an async method
+dotnet_diagnostic.CA1849.severity = warning
+
+# CA2008: Do not create tasks without passing a TaskScheduler
+dotnet_diagnostic.CA2008.severity = warning
+
+# CA2012: Use ValueTasks correctly (prevents performance and concurrency issues)
+dotnet_diagnostic.CA2012.severity = error
+
+# CA2016: Forward the CancellationToken to enabled APIs
+dotnet_diagnostic.CA2016.severity = warning
+
+# CA2250: Use 'ThrowIfNull' utility method
+dotnet_diagnostic.CA2250.severity = warning
+
+# CA2260: Implement generic math interfaces correctly
+dotnet_diagnostic.CA2260.severity = warning
 
 # IDE Code Analyzers rules
 
