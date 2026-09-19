@@ -5,7 +5,7 @@ namespace SemanticTests.StateMachines;
 
 public class MaleyTests
 {
-    enum TestStates
+    private enum TestStates
     {
         StateA,
         StateB,

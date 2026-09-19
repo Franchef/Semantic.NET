@@ -6,8 +6,7 @@ namespace Semantic.StateMachines;
 /// <typeparam name="T">An enumeration type representing the states of the state machine.</typeparam>
 public abstract class StateMachine<T> where T : struct, Enum
 {
-    private readonly object _stateLock = new();
-    private T _currentState;
+    private readonly Lock _stateLock = new();
 
     /// <summary>
     /// Raised when the current state transitions to a different value.
@@ -24,7 +23,7 @@ public abstract class StateMachine<T> where T : struct, Enum
         {
             lock (_stateLock)
             {
-                return _currentState;
+                return field;
             }
         }
         protected set
@@ -35,13 +34,13 @@ public abstract class StateMachine<T> where T : struct, Enum
 
             lock (_stateLock)
             {
-                if (EqualityComparer<T>.Default.Equals(_currentState, value))
+                if (EqualityComparer<T>.Default.Equals(field, value))
                 {
                     return;
                 }
 
-                fromStatus = _currentState;
-                _currentState = value;
+                fromStatus = field;
+                field = value;
                 hasChanged = true;
                 handler = OnTransition;
             }
@@ -73,7 +72,7 @@ public abstract class StateMachine<T> where T : struct, Enum
     {
         public required TState? State { get; init; }
 
-        public static Transition<TState> To(TState state) => new Transition<TState> { State = state };
-        public static Transition<TState> NoTransition() => new Transition<TState> { State = null };
+        public static Transition<TState> To(TState state) => new() { State = state };
+        public static Transition<TState> NoTransition() => new() { State = null };
     }
 }

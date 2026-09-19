@@ -2,8 +2,8 @@ namespace Semantic.StateMachines;
 
 public class MooreBuilder<T> where T : struct, Enum
 {
-    private readonly Dictionary<T, Func<object, StateMachine<T>.Transition<T>>> _stateOutputs = new();
-    private readonly Dictionary<(T State, object Input), T> _transitions = new();
+    private readonly Dictionary<T, Func<object, StateMachine<T>.Transition<T>>> _stateOutputs = [];
+    private readonly Dictionary<(T State, object Input), T> _transitions = [];
     private readonly T _initialState;
 
     public MooreBuilder(T initialState)

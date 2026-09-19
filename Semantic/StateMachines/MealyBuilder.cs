@@ -3,7 +3,7 @@ namespace Semantic.StateMachines;
 public sealed class MealyBuilder<T> where T : struct, Enum
 {
     private readonly T _initialState;
-    private readonly Dictionary<(T State, object Input), Mealy<T>.TransitionDefinition> _transitions = new();
+    private readonly Dictionary<(T State, object Input), Mealy<T>.TransitionDefinition> _transitions = [];
 
     public MealyBuilder(T initialState)
     {

@@ -46,7 +46,11 @@ internal class MovingAverage : IMovingAverage
                 double count = 0;
                 for(int i = 0; i < items.Length; i++)
                 {
-                    if(double.IsNaN(items[i])) continue;
+                    if(double.IsNaN(items[i]))
+                    {
+                        continue;
+                    }
+
                     sum += items[i];
                     count++;
                 }

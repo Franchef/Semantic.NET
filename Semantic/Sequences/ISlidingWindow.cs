@@ -4,11 +4,11 @@ namespace Semantic.Sequences;
 
 public interface ISlidingWindow<T>
 {
-    public int Size { get; }
+    int Size { get; }
 
-    public void Add(T item);
+    void Add(T item);
 
-    public void Clear();
+    void Clear();
 
-    public T[] GetItems();
+    T[] GetItems();
 }

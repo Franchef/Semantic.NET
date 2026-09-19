@@ -18,7 +18,7 @@ public static class PatternMatchesBuilder
     }
     public sealed class Builder<T>
     {
-        private readonly List<T> _matches = new();
+        private readonly List<T> _matches = [];
         internal Builder(T firstElement)
         {
             _matches.Add(firstElement);

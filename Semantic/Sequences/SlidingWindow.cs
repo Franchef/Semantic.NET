@@ -42,7 +42,7 @@ internal sealed class SlidingWindow<T> : ISlidingWindow<T>
     {
         if(_index == -1)
         {
-            return Array.Empty<T>();
+            return [];
         }
 
         if(_isSliding)

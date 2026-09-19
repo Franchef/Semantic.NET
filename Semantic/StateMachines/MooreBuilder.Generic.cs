@@ -5,8 +5,8 @@ public sealed class MooreBuilder<TState, TInput>
     where TInput : notnull
 {
     private readonly Dictionary<TState, Func<TInput, StateMachine<TState>.Transition<TState>>> _stateOutputs =
-        new();
-    private readonly Dictionary<(TState State, TInput Input), TState> _transitions = new();
+        [];
+    private readonly Dictionary<(TState State, TInput Input), TState> _transitions = [];
     private readonly TState _initialState;
 
     public MooreBuilder(TState initialState)

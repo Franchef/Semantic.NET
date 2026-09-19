@@ -11,7 +11,7 @@ public class Moore<T> : StateMachine<T> where T : struct, Enum
     private readonly Dictionary<T, Func<object, Transition<T>>> _stateOutputs;
     private readonly Dictionary<(T State, object Input), T> _transitions;
 
-    public static MooreBuilder<T> Builder(T initialState) => new MooreBuilder<T>(initialState);
+    public static MooreBuilder<T> Builder(T initialState) => new(initialState);
     public static MooreBuilder<T, TInput> Builder<TInput>(T initialState)
         where TInput : notnull => new(initialState);
 

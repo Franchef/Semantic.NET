@@ -6,7 +6,7 @@ public sealed class MealyBuilder<TState, TInput, TOutput>
 {
     private readonly TState _initialState;
     private readonly Dictionary<(TState State, TInput Input), Mealy<TState, TInput, TOutput>.TransitionDefinition>
-        _transitions = new();
+        _transitions = [];
 
     public MealyBuilder(TState initialState)
     {

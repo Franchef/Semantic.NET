@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace Semantic.StateMachines;
 
 internal static class StateMachineRuntime
@@ -7,12 +9,11 @@ internal static class StateMachineRuntime
     )
         where TState : struct, Enum
     {
-        foreach (TState state in Enum.GetValues<TState>())
+        foreach (TState state in from TState state in Enum.GetValues<TState>()
+                              where !stateOutputs.ContainsKey(state)
+                              select state)
         {
-            if (!stateOutputs.ContainsKey(state))
-            {
-                throw new ArgumentException($"State {state} is not defined in the state outputs.");
-            }
+            throw new ArgumentException($"State {state} is not defined in the state outputs.");
         }
     }
 

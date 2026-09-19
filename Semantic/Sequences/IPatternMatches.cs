@@ -1,6 +1,6 @@
 namespace Semantic.Sequences;
 
-public interface IPatternMatches<T>
+public interface IPatternMatches<in T>
 {
     bool HasMatch();
     void Next(T item);
